@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="icon.svg" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Token2 Molto2 CLI Generator</title>
+  </head>
+  <body>
+    <h1>Token2 Molto2 CLI Generator</h1>
+    <form id="generator-form">
+      <label for="binary"
+        >Binary<sup>1</sup> e.g: <code>python3 molto2.py</code>,
+        <code>molto2-config.exe</code></label
+      >
+      <input type="text" id="binary" value="molto2-config.exe" />
+
+      <label for="otpauth-url">OTPAUTH URL</label>
+      <input
+        type="text"
+        id="otpauth-url"
+        value="otpauth://totp/LABEL?secret=BASE32VERYSECRET&issuer=ISSUER&algorithm=SHA1&digits=6&period=30"
+      />
+
+      <label for="profile-number"
+        >Profile number<sup>1</sup>, 0 to 49 (Molto2) or from 0 to 99 (Molto2
+        v2)</label
+      >
+      <input type="number" id="profile-number" value="1" />
+
+      <label for="additional-args"
+        >Additional arguments<sup>1</sup>, e.g
+        <code>--synctime --keyascii CUSTOMERKEY</code></label
+      >
+      <input type="text" id="additional-args" value="--synctime" />
+
+      <label for="command-line"
+        >Generated command line. Title must be 12 symbols or less, you should
+        customise the title this when you use the command.</label
+      >
+      <textarea id="command-line" rows="2" wrap="soft" readonly></textarea>
+
+      <button type="button" id="copy">Copy command to clipboard</button>
+    </form>
+    <p class="small">
+      <sup>1</sup> These fields are saved to your browser's local storage for
+      your convenience. No other form fields are saved.
+    </p>
+
+    <p id="error"></p>
+
+    <details>
+      <summary>Qrcode for OTPAUTH URL</summary>
+      <div id="qrcode-otpauth"></div>
+    </details>
+
+    <details>
+      <summary>Qrcode for CLI</summary>
+      <div id="qrcode-cli"></div>
+    </details>
+
+    <footer>
+      <p>
+        <a href="https://github.com/andygock/molto2-cli-generator"
+          >Source code @ GitHub</a
+        >
+      </p>
+    </footer>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

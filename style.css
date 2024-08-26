@@ -1,0 +1,53 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 1rem;
+}
+* {
+  box-sizing: border-box;
+}
+label {
+  /* display: block; */
+  margin: 0.5rem 0;
+}
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  font-family: monospace;
+}
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+}
+button {
+  padding: 0.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+code {
+  background-color: #ddd;
+  padding: 0.2rem;
+}
+#error {
+  color: red;
+  margin: 0.5rem 0;
+}
+#qrcode img {
+  margin-left: auto;
+  margin-right: auto;
+}
+.small {
+  font-size: small;
+}
+a {
+  text-decoration: none;
+}
+footer {
+  margin-top: 2rem;
+  text-align: center;
+}
