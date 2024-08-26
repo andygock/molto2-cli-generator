@@ -8,6 +8,19 @@ function copyToClipboard() {
     .writeText(commandLine)
     .then(() => {
       // console.log("Copied to clipboard:", commandLine);
+
+      // save previous button text
+      const previousText = document.getElementById("copy").textContent;
+
+      // change button text to indicate success
+      document.getElementById("copy").disabled = true;
+      document.getElementById("copy").textContent = "Copied!";
+
+      // reset button text after 1 second
+      setTimeout(() => {
+        document.getElementById("copy").textContent = previousText;
+        document.getElementById("copy").disabled = false;
+      }, 1000);
     })
     .catch((err) => {
       console.error("Failed to copy text: ", err);
