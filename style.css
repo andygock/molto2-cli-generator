@@ -69,3 +69,22 @@ footer {
 button#copy {
   width: 200px;
 }
+
+input#profile-number {
+  width: 200px;
+}
+
+input#title {
+  width: 200px;
+}
+
+input#binary {
+  width: 200px;
+}
+
+@media (min-width: 1280px) {
+  .flex {
+    display: flex;
+    justify-content: space-between;
+  }
+}

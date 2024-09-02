@@ -87,9 +87,16 @@ function generateCommandLine() {
     }
 
     // get form fields
-    const binary = document.getElementById("binary").value;
+    let binary = document.getElementById("binary").value;
+
+    // add quotes around binary, if it contains spaces
+    if (binary.includes(" ")) {
+      binary = `"${binary}"`;
+    }
+
     const profileNumber = document.getElementById("profile-number").value;
     const additionalArgs = document.getElementById("additional-args").value;
+    const title = document.getElementById("title").value;
 
     // algorithmCode, determines the algorithm used by the OTP generator
     // if not specified, the default is SHA1 HMAC
@@ -98,9 +105,11 @@ function generateCommandLine() {
     const algorithmCode = algorithm === "SHA256" ? 2 : 1;
 
     // create command line and update textarea in ui
-    const commandLine = `"${binary}"${
+    const commandLine = `${binary}${
       additionalArgs ? " " + additionalArgs : ""
-    } --config --profile ${profileNumber} --seedbase32 "${paddedSecret}" --display_timeout 0 --algorithm ${algorithmCode} --timestep 1 --title ${label}`;
+    } --config --profile ${profileNumber} --seedbase32 "${paddedSecret}" --display_timeout 0 --algorithm ${algorithmCode} --timestep 1 --title ${
+      title || label
+    }`;
     document.getElementById("command-line").value = commandLine;
 
     // save only some fields to local storage
