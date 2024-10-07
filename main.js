@@ -89,8 +89,12 @@ function generateCommandLine() {
     // get form fields
     let binary = document.getElementById("binary").value;
 
-    // add quotes around binary, if it contains spaces
-    if (binary.includes(" ")) {
+    // add quotes around binary, if it contains spaces and doesn't have quotes already
+    if (
+      binary.includes(" ") &&
+      !binary.startsWith('"') &&
+      !binary.endsWith('"')
+    ) {
       binary = `"${binary}"`;
     }
 
