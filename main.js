@@ -34,6 +34,17 @@ function padBase32(secret) {
   return secret.padEnd(nearestPowerOf2, "A");
 }
 
+// Quote string for Windows CMD
+function quoteForCmd(str) {
+  if (str.includes('"')) {
+    return '"' + str.replace(/"/g, '""') + '"';
+  } else if (str.includes(" ")) {
+    return '"' + str + '"';
+  } else {
+    return str;
+  }
+}
+
 // save binaryDefinition, profileNumber, additionalArgs to local storage and always load them on page load
 // do not save anything else to local storage
 function saveToLocalStorage({ binary, profileNumber, additionalArgs }) {
@@ -77,6 +88,11 @@ function generateCommandLine() {
     parser.parse();
     const parameters = parser.getParameters();
     const { algorithm, secret, issuer } = parameters;
+    const period = parameters.period || "30";
+    if (period !== "30" && period !== "60") {
+      throw new Error("Invalid period. Only 30 or 60 seconds supported.");
+    }
+    const timestep = period === "60" ? 2 : 1;
     const paddedSecret = padBase32(secret);
     const type = parser.getType();
     const label = parser.getLabel();
@@ -89,18 +105,15 @@ function generateCommandLine() {
     // get form fields
     let binary = document.getElementById("binary").value;
 
-    // add quotes around binary, if it contains spaces and doesn't have quotes already
-    if (
-      binary.includes(" ") &&
-      !binary.startsWith('"') &&
-      !binary.endsWith('"')
-    ) {
-      binary = `"${binary}"`;
-    }
+    // quote binary for CMD
+    binary = quoteForCmd(binary);
 
-    const profileNumber = document.getElementById("profile-number").value;
+    const profileNumberValue =
+      parseInt(document.getElementById("profile-number").value) || 0;
+    const profileNumber = Math.max(0, Math.min(99, profileNumberValue));
     const additionalArgs = document.getElementById("additional-args").value;
     const title = document.getElementById("title").value;
+    const titleValue = (title || label).replace(/"/g, '""');
 
     // algorithmCode, determines the algorithm used by the OTP generator
     // if not specified, the default is SHA1 HMAC
@@ -111,9 +124,7 @@ function generateCommandLine() {
     // create command line and update textarea in ui
     const commandLine = `${binary}${
       additionalArgs ? " " + additionalArgs : ""
-    } --config --profile ${profileNumber} --seedbase32 "${paddedSecret}" --display_timeout 0 --algorithm ${algorithmCode} --timestep 1 --title ${
-      title || label
-    }`;
+    } --config --profile ${profileNumber} --seedbase32 "${paddedSecret}" --display_timeout 0 --algorithm ${algorithmCode} --timestep ${timestep} --title "${titleValue}"`;
     document.getElementById("command-line").value = commandLine;
 
     // save only some fields to local storage
@@ -124,11 +135,13 @@ function generateCommandLine() {
     // otp auth url
     qrOtpAuth.url = otpauthUrl;
     qrOtpAuth.init();
+    document.getElementById("qrcode-otpauth").innerHTML = "";
     document.getElementById("qrcode-otpauth").appendChild(qrOtpAuth.domElement);
 
     // command line
     qrCli.url = commandLine;
     qrCli.init();
+    document.getElementById("qrcode-cli").innerHTML = "";
     document.getElementById("qrcode-cli").appendChild(qrCli.domElement);
   } catch (error) {
     console.error(error);
